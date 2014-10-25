@@ -1,15 +1,116 @@
 use strict;
 use warnings;
 use Test::More;
+use Test::Output;
 
 use WWW::Sitemap::Simple;
 
-my $sm = WWW::Sitemap::Simple->new;
-$sm->add("http://rebuild.fm/");
-my $id = $sm->add("http://rebuild.fm/64/");
-$sm->add_params($id, { priority => "0.8" });
-$sm->write;
+{
+    my $sm = WWW::Sitemap::Simple->new;
+    $sm->add("http://rebuild.fm/");
+    stdout_is(
+        sub { $sm->write; },
+        <<'_XML_',
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+	<url>
+		<loc>http://rebuild.fm/</loc>
+	</url>
+</urlset>
+_XML_
+    );
+}
 
-ok 1;
+{
+    my $sm = WWW::Sitemap::Simple->new;
+    $sm->add("http://rebuild.fm/");
+    my $id = $sm->add("http://rebuild.fm/64/");
+    $sm->add_params($id, { priority => "0.8" });
+
+    stdout_is(
+        sub { $sm->write; },
+        <<'_XML_',
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+	<url>
+		<loc>http://rebuild.fm/</loc>
+	</url>
+	<url>
+		<loc>http://rebuild.fm/64/</loc>
+		<priority>0.8</priority>
+	</url>
+</urlset>
+_XML_
+    );
+}
+
+{
+    my $sm = WWW::Sitemap::Simple->new;
+    $sm->add("http://rebuild.fm/");
+    my $id = $sm->add("http://rebuild.fm/63/");
+    my $params = {
+        changefreq => 'weekly',
+        priority   => "0.1",
+        lastmod    => "2014-10-25T20:49:05+00:00",
+    };
+    $sm->add_params($id, $params);
+
+    stdout_is(
+        sub { $sm->write; },
+        <<'_XML_',
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+	<url>
+		<loc>http://rebuild.fm/</loc>
+	</url>
+	<url>
+		<loc>http://rebuild.fm/63/</loc>
+		<lastmod>2014-10-25T20:49:05+00:00</lastmod>
+		<changefreq>weekly</changefreq>
+		<priority>0.1</priority>
+	</url>
+</urlset>
+_XML_
+    );
+}
+
+{
+    my $sm = WWW::Sitemap::Simple->new(
+        urlset => {
+            'xmlns' => "http://www.sitemaps.org/schemas/sitemap/0.9",
+            'xmlns:xsi' => 'http://www.w3.org/2001/XMLSchema-instance',
+            'xsi:schemaLocation' => 'http://www.sitemaps.org/schemas/sitemap/0.9 http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd',
+        },
+    );
+    $sm->add("http://rebuild.fm/");
+
+    stdout_is(
+        sub { $sm->write; },
+        <<'_XML_',
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9 http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd">
+	<url>
+		<loc>http://rebuild.fm/</loc>
+	</url>
+</urlset>
+_XML_
+    );
+}
+
+{
+    my $sm = WWW::Sitemap::Simple->new(indent => '  ');
+    $sm->add("http://rebuild.fm/");
+    stdout_is(
+        sub { $sm->write; },
+        <<'_XML_',
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <url>
+    <loc>http://rebuild.fm/</loc>
+  </url>
+</urlset>
+_XML_
+    );
+}
 
 done_testing;

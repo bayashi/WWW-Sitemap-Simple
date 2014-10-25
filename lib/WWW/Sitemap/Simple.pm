@@ -16,14 +16,14 @@ my @KEYS = qw/ loc lastmod changefreq priority /;
 
 sub new {
     my $class = shift;
-    my $args  = shift || +{};
+    my %args  = @_;
 
     bless {
         urlset => {
             xmlns => $DEFAULT_XMLNS,
         },
         indent => $DEFAULT_INDENT,
-        %{$args},
+        %args,
         url => +{},
     }, $class;
 }
@@ -64,7 +64,9 @@ sub write {
 
     my $xml = $self->_write_xml_header;
 
-    for my $id (keys %{$self->url}) {
+    for my $id (
+        sort { $self->url->{$a}{loc} cmp $self->url->{$b}{loc} } keys %{$self->url}
+    ) {
         my $item = "$indent<url>\n";
         for my $key (@KEYS) {
             if ( my $value = $self->url->{$id}{$key} ) {
@@ -83,7 +85,7 @@ sub _write_xml_header {
     my ($self) = @_;
 
     my $urlset_attr = '';
-    for my $key (keys %{$self->urlset}) {
+    for my $key (sort keys %{$self->urlset}) {
         my $value = $self->urlset->{$key};
         $urlset_attr .= qq| $key="$value"|;
     }
