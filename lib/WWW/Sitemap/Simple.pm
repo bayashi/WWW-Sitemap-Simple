@@ -18,17 +18,45 @@ __END__
 
 =head1 NAME
 
-WWW::Sitemap::Simple - one line description
+WWW::Sitemap::Simple - simple sitemap builder
 
 
 =head1 SYNOPSIS
 
     use WWW::Sitemap::Simple;
 
+    my $sm = WWW::Sitemap::Simple->new;
+
+    # simple way
+    $sm->add('http://example.com/');
+
+    # with params
+    $sm->add(
+        'http://example.com/foo' => {
+            lastmod    => '2005-01-01',
+            changefreq => 'monthly',
+            priority   => '0.8',
+        },
+    );
+
+    # set params later
+    my $key = $sm->add('http://example.com/foo/bar');
+    $sm->add_params(
+        $key => {
+            lastmod    => '2005-01-01',
+            changefreq => 'monthly',
+            priority   => '0.8',
+        },
+    );
+
+    $sm->write('sitemap/file/path');
+
 
 =head1 DESCRIPTION
 
-WWW::Sitemap::Simple is
+WWW::Sitemap::Simple is the builder of sitemap with less dependencies.
+
+see more detail about sitemap: L<http://www.sitemaps.org/protocol.html>
 
 
 =head1 REPOSITORY
@@ -45,7 +73,9 @@ Dai Okabayashi E<lt>bayashi@cpan.orgE<gt>
 
 =head1 SEE ALSO
 
-L<Other::Module>
+L<WWW::Sitemap::XML>
+
+L<Web::Sitemap>
 
 
 =head1 LICENSE
