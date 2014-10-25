@@ -7,6 +7,11 @@ use WWW::Sitemap::Simple;
 
 {
     my $sm = WWW::Sitemap::Simple->new;
+    is ref($sm), 'WWW::Sitemap::Simple';
+}
+
+{
+    my $sm = WWW::Sitemap::Simple->new;
     $sm->add("http://rebuild.fm/");
     stdout_is(
         sub { $sm->write; },
@@ -18,6 +23,7 @@ use WWW::Sitemap::Simple;
 	</url>
 </urlset>
 _XML_
+        'basic'
     );
 }
 
@@ -41,6 +47,7 @@ _XML_
 	</url>
 </urlset>
 _XML_
+        'add url'
     );
 }
 
@@ -71,6 +78,7 @@ _XML_
 	</url>
 </urlset>
 _XML_
+        'add_params'
     );
 }
 
@@ -94,6 +102,7 @@ _XML_
 	</url>
 </urlset>
 _XML_
+        'urlset'
     );
 }
 
@@ -110,6 +119,7 @@ _XML_
   </url>
 </urlset>
 _XML_
+        'indent'
     );
 }
 
