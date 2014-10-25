@@ -2,6 +2,7 @@ package WWW::Sitemap::Simple;
 use strict;
 use warnings;
 use Carp qw/croak/;
+use Digest::MD5 qw/md5_hex/;
 
 our $VERSION = '0.01';
 
@@ -9,7 +10,43 @@ sub new {
     my $class = shift;
     my $args  = shift || +{};
 
-    bless $args, $class;
+    bless {
+        urlset => {
+            xmlns => 'http://www.sitemaps.org/schemas/sitemap/0.9',
+        },
+        %{$args},
+        url => {},
+    }, $class;
+}
+
+sub add {
+    my ($self, $url, $params) = @_;
+
+    my $id = md5_hex($url);
+
+    $self->{url}{$id} = {
+        %{$params || +{}},
+        loc => $url,
+    };
+
+    return $id;
+}
+
+sub add_params {
+    my ($self, $id, $params) = @_;
+
+    croak "key is not exists: $id" unless exists $self->{url}{$id};
+
+    $self->{url}{$id} = %{$params};
+}
+
+sub write {
+    my ($self) = @_;
+
+    for my $id (keys %{$self->{url}}) {
+        my $loc = $self->{url}{$id}{loc};
+        print "$loc\n";
+    }
 }
 
 1;
