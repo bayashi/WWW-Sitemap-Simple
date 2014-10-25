@@ -145,9 +145,9 @@ WWW::Sitemap::Simple - simple sitemap builder
 
 =head1 DESCRIPTION
 
-WWW::Sitemap::Simple is the builder of sitemap with less dependencies.
+WWW::Sitemap::Simple is the builder of sitemap with less dependency modules.
 
-see more detail about sitemap: L<http://www.sitemaps.org/protocol.html>
+The Sitemap protocol: L<http://www.sitemaps.org/protocol.html>
 
 
 =head1 METHODS
