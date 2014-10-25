@@ -166,21 +166,21 @@ constractor. There are parameters below.
 
 =back
 
-=head2 add
+=head2 add($url[, $params])
 
 add new url. return an id(md5 hex string).
 
-=head2 add_params
+=head2 add_params($id, $params)
 
 add parameters to url by id
 
-=head2 get_id
+=head2 get_id($url)
 
 get an id for calling add_params method.
 
 =head2 write
 
-write sitemap
+write sitemap. By default, put sitemap to STDOUT.
 
 
 =head1 CAVEAT
