@@ -6,6 +6,8 @@ use Digest::MD5 qw/md5_hex/;
 
 our $VERSION = '0.01';
 
+my @KEYS = qw/ loc lastmod changefreq priority /;
+
 sub new {
     my $class = shift;
     my $args  = shift || +{};
@@ -14,6 +16,7 @@ sub new {
         urlset => {
             xmlns => 'http://www.sitemaps.org/schemas/sitemap/0.9',
         },
+        indent => "\t",
         %{$args},
         url => {},
     }, $class;
@@ -37,16 +40,50 @@ sub add_params {
 
     croak "key is not exists: $id" unless exists $self->{url}{$id};
 
-    $self->{url}{$id} = %{$params};
+    for my $key (@KEYS) {
+        $self->{url}{$id}{$key} = $params->{$key} if exists $params->{$key};
+    }
 }
 
 sub write {
     my ($self) = @_;
 
+    my $indent = $self->{indent} || '';
+
+    my $xml = $self->_write_xml_header;
+
     for my $id (keys %{$self->{url}}) {
-        my $loc = $self->{url}{$id}{loc};
-        print "$loc\n";
+        my $item = "$indent<url>\n";
+        for my $key (@KEYS) {
+            if ( my $value = $self->{url}{$id}{$key} ) {
+                $item .= "$indent$indent<$key>$value</$key>\n";
+            }
+        }
+        $xml .= "$item$indent</url>\n";
     }
+
+    $xml .= $self->_write_xml_footer;
+
+    print $xml;
+}
+
+sub _write_xml_header {
+    my ($self) = @_;
+
+    my $header = <<"_XML_";
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="$self->{urlset}{xmlns}">
+_XML_
+    return $header;
+}
+
+sub _write_xml_footer {
+    my ($self) = @_;
+
+    my $footer = <<"_XML_";
+</urlset>
+_XML_
+    return $footer;
 }
 
 1;
