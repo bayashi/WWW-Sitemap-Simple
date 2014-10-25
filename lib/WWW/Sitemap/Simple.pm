@@ -3,9 +3,15 @@ use strict;
 use warnings;
 use Carp qw/croak/;
 use Digest::MD5 qw/md5_hex/;
+use Class::Accessor::Lite (
+    rw  => [qw/ urlset indent /],
+    ro  => [qw/ url /],
+);
 
 our $VERSION = '0.01';
 
+my $DEFAULT_XMLNS  = 'http://www.sitemaps.org/schemas/sitemap/0.9';
+my $DEFAULT_INDENT = "\t";
 my @KEYS = qw/ loc lastmod changefreq priority /;
 
 sub new {
@@ -14,20 +20,20 @@ sub new {
 
     bless {
         urlset => {
-            xmlns => 'http://www.sitemaps.org/schemas/sitemap/0.9',
+            xmlns => $DEFAULT_XMLNS,
         },
-        indent => "\t",
+        indent => $DEFAULT_INDENT,
         %{$args},
-        url => {},
+        url => +{},
     }, $class;
 }
 
 sub add {
     my ($self, $url, $params) = @_;
 
-    my $id = md5_hex($url);
+    my $id = md5_hex(__PACKAGE__ . $url);
 
-    $self->{url}{$id} = {
+    $self->url->{$id} = {
         %{$params || +{}},
         loc => $url,
     };
@@ -41,7 +47,7 @@ sub add_params {
     croak "key is not exists: $id" unless exists $self->{url}{$id};
 
     for my $key (@KEYS) {
-        $self->{url}{$id}{$key} = $params->{$key} if exists $params->{$key};
+        $self->url->{$id}{$key} = $params->{$key} if exists $params->{$key};
     }
 }
 
@@ -52,10 +58,10 @@ sub write {
 
     my $xml = $self->_write_xml_header;
 
-    for my $id (keys %{$self->{url}}) {
+    for my $id (keys %{$self->url}) {
         my $item = "$indent<url>\n";
         for my $key (@KEYS) {
-            if ( my $value = $self->{url}{$id}{$key} ) {
+            if ( my $value = $self->url->{$id}{$key} ) {
                 $item .= "$indent$indent<$key>$value</$key>\n";
             }
         }
@@ -70,9 +76,14 @@ sub write {
 sub _write_xml_header {
     my ($self) = @_;
 
+    my $urlset_attr = '';
+    for my $key (keys %{$self->urlset}) {
+        my $value = $self->urlset->{$key};
+        $urlset_attr .= qq| $key="$value"|;
+    }
     my $header = <<"_XML_";
 <?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="$self->{urlset}{xmlns}">
+<urlset$urlset_attr>
 _XML_
     return $header;
 }
