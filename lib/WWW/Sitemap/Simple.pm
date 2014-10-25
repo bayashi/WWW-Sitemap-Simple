@@ -174,6 +174,10 @@ add new url. return an id(md5 hex string).
 
 add parameters to url by id
 
+=head2 get_id
+
+get an id for calling add_params method.
+
 =head2 write
 
 write sitemap
