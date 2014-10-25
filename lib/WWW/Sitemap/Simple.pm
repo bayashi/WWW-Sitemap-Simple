@@ -144,6 +144,33 @@ WWW::Sitemap::Simple is the builder of sitemap with less dependencies.
 see more detail about sitemap: L<http://www.sitemaps.org/protocol.html>
 
 
+=head1 METHODS
+
+=head2 new
+
+constractor. There are parameters below.
+
+=over 4
+
+=item urlset // { xmlns => 'http://www.sitemaps.org/schemas/sitemap/0.9' }
+
+=item indent // "\t"
+
+=back
+
+=head2 add
+
+add new url. return an id(md5 hex string).
+
+=head2 add_params
+
+add parameters to url by id
+
+=head2 write
+
+write sitemap
+
+
 =head1 REPOSITORY
 
 WWW::Sitemap::Simple is hosted on github: L<http://github.com/bayashi/WWW-Sitemap-Simple>
