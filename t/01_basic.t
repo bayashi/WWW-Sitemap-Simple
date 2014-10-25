@@ -4,8 +4,12 @@ use Test::More;
 
 use WWW::Sitemap::Simple;
 
-can_ok 'WWW::Sitemap::Simple', qw/new/;
+my $sm = WWW::Sitemap::Simple->new;
+$sm->add("http://rebuild.fm/");
+my $id = $sm->add("http://rebuild.fm/64/");
+$sm->add_params($id, { priority => "0.8" });
+$sm->write;
 
-# write more tests
+ok 1;
 
 done_testing;
