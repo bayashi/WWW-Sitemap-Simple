@@ -111,6 +111,8 @@ __END__
 
 WWW::Sitemap::Simple - simple sitemap builder
 
+WARN: B<still in the experimental module>. I may change interfaces without any announcements.
+
 
 =head1 SYNOPSIS
 
