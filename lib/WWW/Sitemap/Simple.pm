@@ -156,9 +156,9 @@ The Sitemap protocol: L<http://www.sitemaps.org/protocol.html>
 
 =head1 METHODS
 
-=head2 new
+=head2 new(%options)
 
-constractor. There are parameters below.
+constractor. There are optional parameters below.
 
 =over 4
 
