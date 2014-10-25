@@ -31,7 +31,7 @@ sub new {
 sub add {
     my ($self, $url, $params) = @_;
 
-    my $id = md5_hex(__PACKAGE__ . $url);
+    my $id = $self->get_id($url);
 
     $self->url->{$id} = {
         %{$params || +{}},
@@ -49,6 +49,12 @@ sub add_params {
     for my $key (@KEYS) {
         $self->url->{$id}{$key} = $params->{$key} if exists $params->{$key};
     }
+}
+
+sub get_id {
+    my ($self, $url) = @_;
+
+    return md5_hex(__PACKAGE__ . $url);
 }
 
 sub write {
@@ -169,6 +175,13 @@ add parameters to url by id
 =head2 write
 
 write sitemap
+
+
+=head1 CAVEAT
+
+Your Sitemap must be UTF-8 encoded (you can generally do this when you save the file). As with all XML files, any data values (including URLs) must use entity escape codes for the characters.
+
+see more detail: L<http://www.sitemaps.org/protocol.html#escaping>
 
 
 =head1 REPOSITORY
