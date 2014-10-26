@@ -1,5 +1,8 @@
 Revision history for Perl extension WWW::Sitemap::Simple
 
+0.04    Sun Oct 26 16:52:35 JST 2014
+        - fix POD
+
 0.03    Sun Oct 26 16:40:37 JST 2014
         - croak if over limitation of URL count or xml file size
 
