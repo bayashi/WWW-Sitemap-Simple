@@ -3,6 +3,7 @@ use strict;
 use warnings;
 use Carp qw/croak/;
 use Digest::MD5 qw/md5_hex/;
+use IO::File;
 use Class::Accessor::Lite (
     rw  => [qw/ urlset indent /],
     ro  => [qw/ url /],
@@ -58,11 +59,45 @@ sub get_id {
 }
 
 sub write {
-    my ($self) = @_;
+    my ($self, $file) = @_;
 
-    my $xml = $self->_get_xml;
+    $self->_write($file => $self->_get_xml);
+}
 
-    print $xml;
+sub _write {
+    my ($self, $file, $xml) = @_;
+
+    if (!$file) {
+        STDOUT->print($xml);
+    }
+    elsif (my $re = ref $file) {
+        if ($re eq 'GLOB') {
+            print $file $xml;
+        }
+        else {
+            $file->print($xml);
+        }
+    }
+    else {
+        $self->_write_file($file, $xml);
+    }
+}
+
+sub _write_file {
+    my ($self, $file, $xml) = @_;
+
+    my $fh;
+    if ($file =~ m!\.gz$!i) {
+        require IO::Zlib;
+        IO::Zlib->import;
+        $fh = IO::Zlib->new($file => 'wb9');
+    }
+    else {
+        $fh = IO::File->new($file => 'w');
+    }
+    croak "Could not create '$file'" unless $fh;
+    $fh->print($xml);
+    $fh->close;
 }
 
 sub _get_xml {
@@ -188,7 +223,7 @@ add parameters to url by id
 
 get an id for calling add_params method.
 
-=head2 write
+=head2 write([$file|$fh|$IO_OBJ])
 
 write sitemap. By default, put sitemap to STDOUT.
 

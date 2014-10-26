@@ -14,12 +14,16 @@ my $builder = Module::Build->new(
     build_requires      => {
         'Test::More' => 0.88,
         'Test::Output' => 0,
+        'File::Temp' => 0,
     },
     requires => {
         'perl' => '5.008001',
         'Carp' => 0,
         'Class::Accessor::Lite' => 0.05,
         'Digest::MD5' => 0,
+        'IO::File' => 0,
+        'Compress::Zlib' => 0,
+        'IO::Zlib' => 0,
     },
     add_to_cleanup      => [ 'WWW-Sitemap-Simple-*' ],
     meta_merge     => {
