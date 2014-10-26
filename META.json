@@ -41,7 +41,7 @@
    "provides" : {
       "WWW::Sitemap::Simple" : {
          "file" : "lib/WWW/Sitemap/Simple.pm",
-         "version" : "0.02"
+         "version" : "0.03"
       }
    },
    "release_status" : "stable",
@@ -56,5 +56,5 @@
          "url" : "http://github.com/bayashi/WWW-Sitemap-Simple"
       }
    },
-   "version" : "0.02"
+   "version" : "0.03"
 }

@@ -9,7 +9,7 @@ use Class::Accessor::Lite (
     ro  => [qw/ url /],
 );
 
-our $VERSION = '0.02';
+our $VERSION = '0.03';
 
 my $DEFAULT_XMLNS  = 'http://www.sitemaps.org/schemas/sitemap/0.9';
 my $DEFAULT_INDENT = "\t";

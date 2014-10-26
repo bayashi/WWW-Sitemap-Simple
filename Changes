@@ -1,5 +1,8 @@
 Revision history for Perl extension WWW::Sitemap::Simple
 
+0.03    Sun Oct 26 16:40:37 JST 2014
+        - croak if over limitation of URL count or xml file size
+
 0.02    Sun Oct 26 15:08:36 JST 2014
         - enhanced 'write' method
 
