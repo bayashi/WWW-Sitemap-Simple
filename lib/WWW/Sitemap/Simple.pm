@@ -60,6 +60,14 @@ sub get_id {
 sub write {
     my ($self) = @_;
 
+    my $xml = $self->_get_xml;
+
+    print $xml;
+}
+
+sub _get_xml {
+    my $self = shift;
+
     my $indent = $self->{indent} || '';
 
     my $xml = $self->_write_xml_header;
@@ -78,7 +86,7 @@ sub write {
 
     $xml .= $self->_write_xml_footer;
 
-    print $xml;
+    return $xml;
 }
 
 sub _write_xml_header {
