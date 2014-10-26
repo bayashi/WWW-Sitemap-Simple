@@ -5,7 +5,7 @@ use Carp qw/croak/;
 use Digest::MD5 qw/md5_hex/;
 use IO::File;
 use Class::Accessor::Lite (
-    rw  => [qw/ urlset indent /],
+    rw  => [qw/ urlset indent fatal /],
     ro  => [qw/ url /],
 );
 
@@ -14,6 +14,9 @@ our $VERSION = '0.02';
 my $DEFAULT_XMLNS  = 'http://www.sitemaps.org/schemas/sitemap/0.9';
 my $DEFAULT_INDENT = "\t";
 my @KEYS = qw/ loc lastmod changefreq priority /;
+
+our $LIMIT_URL_COUNT = 50000;
+our $LIMIT_URL_SIZE  = 10_485_760; # byte
 
 sub new {
     my $class = shift;
@@ -24,7 +27,9 @@ sub new {
             xmlns => $DEFAULT_XMLNS,
         },
         indent => $DEFAULT_INDENT,
+        fatal  => 1,
         %args,
+        count => 0,
         url => +{},
     }, $class;
 }
@@ -38,6 +43,12 @@ sub add {
         %{$params || +{}},
         loc => $url,
     };
+
+    $self->{count}++;
+    if ($self->fatal && $self->{count} > $LIMIT_URL_COUNT) {
+        croak "too many URL added: no more than $LIMIT_URL_COUNT URLs";
+    }
+
 
     return $id;
 }
@@ -61,7 +72,13 @@ sub get_id {
 sub write {
     my ($self, $file) = @_;
 
-    $self->_write($file => $self->_get_xml);
+    my $xml = $self->_get_xml;
+
+    if ($self->fatal && length $xml > $LIMIT_URL_SIZE) {
+        croak "too large xml: no more than $LIMIT_URL_SIZE bytes";
+    }
+
+    $self->_write($file => $xml);
 }
 
 sub _write {
@@ -208,6 +225,10 @@ constractor. There are optional parameters below.
 =item urlset // { xmlns => 'http://www.sitemaps.org/schemas/sitemap/0.9' }
 
 =item indent // "\t"
+
+=item fatal // TRUE
+
+If you add URLs more than 50,000 or generated XML file size over 10MB, then it will croak error.
 
 =back
 
