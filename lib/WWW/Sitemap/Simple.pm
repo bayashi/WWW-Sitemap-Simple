@@ -173,8 +173,6 @@ __END__
 
 WWW::Sitemap::Simple - simple sitemap builder
 
-WARN: B<still in the experimental module>. I may change interfaces without any announcements.
-
 
 =head1 SYNOPSIS
 
@@ -273,6 +271,8 @@ Dai Okabayashi E<lt>bayashi@cpan.orgE<gt>
 L<WWW::Sitemap::XML>
 
 L<Web::Sitemap>
+
+L<Search::Sitemap>
 
 
 =head1 LICENSE
