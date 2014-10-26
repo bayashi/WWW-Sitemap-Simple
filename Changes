@@ -1,4 +1,7 @@
 Revision history for Perl extension WWW::Sitemap::Simple
 
+0.02    Sun Oct 26 15:08:36 JST 2014
+        - enhanced 'write' method
+
 0.01    Sun Oct 26 07:22:48 JST 2014
         - original version
