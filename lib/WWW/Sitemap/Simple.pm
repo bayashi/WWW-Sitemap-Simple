@@ -56,7 +56,7 @@ sub add {
 sub add_params {
     my ($self, $id, $params) = @_;
 
-    croak "key is not exists: $id" unless exists $self->{url}{$id};
+    croak "key is not exists: $id" unless exists $self->url->{$id};
 
     for my $key (@KEYS) {
         $self->url->{$id}{$key} = $params->{$key} if exists $params->{$key};
