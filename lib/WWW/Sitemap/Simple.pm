@@ -247,6 +247,33 @@ get an id for calling add_params method.
 
 write sitemap. By default, put sitemap to STDOUT.
 
+=head2 urlset($hash)
+
+get or set the urlset attribute as hash.
+
+    my $sm = WWW::Sitemap::Simple->new;
+    $sm->urlset({
+        'xmlns' => "http://www.sitemaps.org/schemas/sitemap/0.9",
+        'xmlns:xsi' => 'http://www.w3.org/2001/XMLSchema-instance',
+        'xsi:schemaLocation' => 'http://www.sitemaps.org/schemas/sitemap/0.9 http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd',
+    });
+
+=head2 indent($string)
+
+get or set indent strings
+
+=head2 fatal($boolean)
+
+get or set boolean value for croaking
+
+=head2 url
+
+get all url hash lists
+
+=head2 count
+
+get a count of url
+
 
 =head1 CAVEAT
 
