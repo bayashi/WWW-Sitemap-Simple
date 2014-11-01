@@ -8,6 +8,12 @@ use WWW::Sitemap::Simple;
 {
     my $sm = WWW::Sitemap::Simple->new;
     is ref($sm), 'WWW::Sitemap::Simple';
+    is $sm->count, 0;
+    is $sm->indent, "\t";
+    is_deeply $sm->url, +{};
+    is_deeply $sm->urlset, +{
+        xmlns => 'http://www.sitemaps.org/schemas/sitemap/0.9',
+    };
 }
 
 {
