@@ -32,7 +32,7 @@ _XML_
     my $id = $sm->add("http://rebuild.fm/");
     my $id_again = $sm->add("http://rebuild.fm/");
     is $id, $id_again, 'add twice';
-    is $sm->{count}, 1, 'count up only once';
+    is $sm->count, 1, 'count up only once';
     stdout_is(
         sub { $sm->write; },
         <<'_XML_',
@@ -68,6 +68,8 @@ _XML_
 _XML_
         'add url'
     );
+
+    is $sm->count, 2;
 }
 
 {
