@@ -39,6 +39,8 @@ sub add {
 
     my $id = $self->get_id($url);
 
+    return $id if exists $self->url->{$id};
+
     $self->url->{$id} = {
         %{$params || +{}},
         loc => $url,
