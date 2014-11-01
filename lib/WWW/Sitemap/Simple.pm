@@ -6,7 +6,7 @@ use Digest::MD5 qw/md5_hex/;
 use IO::File;
 use Class::Accessor::Lite (
     rw  => [qw/ urlset indent fatal /],
-    ro  => [qw/ url /],
+    ro  => [qw/ url count /],
 );
 
 our $VERSION = '0.04';
@@ -47,7 +47,7 @@ sub add {
     };
 
     $self->{count}++;
-    if ($self->fatal && $self->{count} > $LIMIT_URL_COUNT) {
+    if ($self->fatal && $self->count > $LIMIT_URL_COUNT) {
         croak "too many URL added: no more than $LIMIT_URL_COUNT URLs";
     }
 
