@@ -1,5 +1,9 @@
 Revision history for Perl extension WWW::Sitemap::Simple
 
+0.05    Sat Nov  1 17:07:37 JST 2014
+        - add method: count
+        - add URL only once
+
 0.04    Sun Oct 26 16:52:35 JST 2014
         - fix POD
 
