@@ -24,6 +24,9 @@ my $builder = Module::Build->new(
         'IO::File' => 0,
         'Compress::Zlib' => 0,
         'IO::Zlib' => 0,
+        'Encode' => 0,
+        'URI::Escape::XS' => 0,
+        'HTML::Entities' => 0,
     },
     add_to_cleanup      => [ 'WWW-Sitemap-Simple-*' ],
     meta_merge     => {
