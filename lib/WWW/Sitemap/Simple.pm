@@ -4,8 +4,11 @@ use warnings;
 use Carp qw/croak/;
 use Digest::MD5 qw/md5_hex/;
 use IO::File;
+use Encode qw//;
+use URI::Escape::XS qw//;
+use HTML::Entities qw//;
 use Class::Accessor::Lite (
-    rw  => [qw/ urlset indent fatal /],
+    rw  => [qw/ urlset indent fatal escape /],
     ro  => [qw/ url /],
 );
 
@@ -28,6 +31,7 @@ sub new {
         },
         indent => $DEFAULT_INDENT,
         fatal  => 1,
+        escape => 0,
         %args,
         url => +{},
     }, $class;
@@ -39,6 +43,8 @@ sub count {
 
 sub add {
     my ($self, $url, $params) = @_;
+
+    $url = $self->_escape($url) if $self->escape;
 
     my $id = $self->get_id($url);
 
@@ -64,6 +70,19 @@ sub add_params {
     for my $key (@KEYS) {
         $self->url->{$id}{$key} = $params->{$key} if exists $params->{$key};
     }
+}
+
+sub _escape {
+    my ($self, $url) = @_;
+
+    if (Encode::is_utf8($url)) {
+        $url = Encode::encode_utf8($url);
+    }
+
+    return HTML::Entities::encode_entities(
+        URI::Escape::XS::uri_escape($url, "\x00-\x1f\x7f-\xff"),
+        q|&'"<>|
+    );
 }
 
 sub get_id {
@@ -230,6 +249,10 @@ constractor. There are optional parameters below.
 =item fatal // TRUE
 
 If you add URLs more than 50,000 or generated XML file size over 10MB, then it will croak error.
+
+=item escape // FALSE
+
+If you set TRUE value to this C<escape> option, then URL is escaped(hi-bit characters and entities[&"'<>]) when you call C<add> method automatically.
 
 =back
 

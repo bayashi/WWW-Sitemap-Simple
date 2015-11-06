@@ -1,5 +1,6 @@
 use strict;
 use warnings;
+use utf8;
 use Test::More;
 use Test::Output;
 
@@ -10,6 +11,7 @@ use WWW::Sitemap::Simple;
     is ref($sm), 'WWW::Sitemap::Simple';
     is $sm->count, 0;
     is $sm->indent, "\t";
+    is $sm->escape, 0;
     is_deeply $sm->url, +{};
     is_deeply $sm->urlset, +{
         xmlns => 'http://www.sitemaps.org/schemas/sitemap/0.9',
@@ -147,6 +149,23 @@ _XML_
 </urlset>
 _XML_
         'indent'
+    );
+}
+
+{
+    my $sm = WWW::Sitemap::Simple->new(escape => 1);
+    $sm->add(qq|http://rebuild.fm/?あ=<'">&い=1|);
+    stdout_is(
+        sub { $sm->write; },
+        <<'_XML_',
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+	<url>
+		<loc>http://rebuild.fm/?%E3%81%82=&lt;&#39;&quot;&gt;&amp;%E3%81%84=1</loc>
+	</url>
+</urlset>
+_XML_
+        'escape'
     );
 }
 
