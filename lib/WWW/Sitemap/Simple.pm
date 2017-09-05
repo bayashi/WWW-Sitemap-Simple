@@ -238,7 +238,7 @@ The Sitemap protocol: L<http://www.sitemaps.org/protocol.html>
 
 =head2 new(%options)
 
-constractor. There are optional parameters below.
+constructor. There are optional parameters below.
 
 =over 4
 
